@@ -23,11 +23,11 @@ class JwtAuthenticationProxyServiceTest {
 
     private JwtAuthenticationProxyService jwtAuthenticationProxyService;
     private final String secretKey = "c3ByaW5nLWJvb3Qtand0LXR1dG9yaWFsLXNlY3JldC1rZXktZ2VuZXJhdGVkLWJ5LW1hbGdhbg==";
-    private final Long masAge = 3600000L;
+    private final Long maxAge = 3600000L;
 
     @BeforeEach
     void setUp() {
-        jwtAuthenticationProxyService = new JwtAuthenticationProxyService(secretKey, masAge);
+        jwtAuthenticationProxyService = new JwtAuthenticationProxyService(secretKey, maxAge);
     }
 
     @Test
