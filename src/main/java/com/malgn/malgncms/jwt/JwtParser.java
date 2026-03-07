@@ -1,54 +1,50 @@
 package com.malgn.malgncms.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /**
  * packageName    : com.malgn.malgncms.jwt
- * fileName       : validaeToken
+ * fileName       : JwtParser
  * author         : JAEIK
- * date           : 3/7/26
+ * date           : 3/8/26
  * description    :
  * ===========================================================
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
- * 3/7/26        JAEIK       최초 생성
+ * 3/8/26        JAEIK       최초 생성
  */
-@Slf4j
 @Component
-public class JwtValidator {
+public class JwtParser {
     private final SecretKey secretKey;
 
-    public JwtValidator(@Value("${jwt.secret-key}") String key) {
+    public JwtParser(@Value("${jwt.secret-key}") String key) {
         this.secretKey = Keys.hmacShaKeyFor(key.getBytes(StandardCharsets.UTF_8));
     }
 
-    public boolean validateToken(String token) {
+    public Map<String, Object> parseClaims(String token) {
+        Jws<Claims> jws;
         try {
-            Jwts.parser()
+            jws = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
-            return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.error("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.error("만료된 JWT 토큰입니다.");
-        } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰입니다.");
-        } catch (IllegalArgumentException e) {
-            log.error("JWT 토큰이 잘못되었습니다.");
+            return null;
+        } catch (JwtException e) {
+            throw new IllegalArgumentException("잘못된 토큰 입니다.");
         }
-        return false;
+        return Map.copyOf(jws.getPayload()); // 수정불가
     }
 }
