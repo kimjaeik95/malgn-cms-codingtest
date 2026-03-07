@@ -1,6 +1,9 @@
 spring:
   profiles:
     active:
+  config:
+    import:
+      - optional:file:.env[.properties]
 
   datasource:
     url: jdbc:h2:mem:MalgnCMS;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -20,8 +23,14 @@ spring:
     baseline-on-migrate: false
     locations: classpath:db/migration
 
+
+
 server:
   port: 8080
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  max-age: ${JWT_MAX_AGE:3600000}
 
 logging:
   level:
