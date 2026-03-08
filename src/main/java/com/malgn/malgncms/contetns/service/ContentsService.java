@@ -6,6 +6,7 @@ import com.malgn.malgncms.contetns.dto.ContentsResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * packageName    : com.malgn.malgncms.contetns.service
@@ -22,5 +23,7 @@ public interface ContentsService {
     ContentsResponse createContent(AuthenticateMember AuthenticateMember, ContentsRequest contentsRequest);
 
     List<ContentsResponse> getContents(Pageable pageable);
+
+    ContentsResponse getContent(Long id);
 
 }

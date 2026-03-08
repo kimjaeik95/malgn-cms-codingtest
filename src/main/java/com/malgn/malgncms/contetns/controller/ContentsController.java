@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,5 +55,11 @@ public class ContentsController {
 
         List<ContentsResponse> contentsResponseList = contentsService.getContents(pageable);
         return ResponseEntity.ok().body(contentsResponseList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ContentsResponse> getContent(@PathVariable("id") Long id) {
+        ContentsResponse contentsResponse = contentsService.getContent(id);
+        return ResponseEntity.ok().body(contentsResponse);
     }
 }

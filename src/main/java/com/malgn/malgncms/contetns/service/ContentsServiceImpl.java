@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,5 +53,13 @@ public class ContentsServiceImpl implements ContentsService{
         return contents.getContent().stream()
                 .map(ContentsResponse::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ContentsResponse getContent(Long id) {
+        Content content = contentsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
+
+        return ContentsResponse.toDto(content);
     }
 }

@@ -116,4 +116,22 @@ class ContentsServiceImplTest {
         assertThat(result.get(0).getTitle()).isEqualTo("제목");
         verify(contentsRepository, times(1)).findAll(pageable);
     }
+
+    @Test
+    @DisplayName("콘텐츠 상세 조회 성공")
+    void getContent() {
+        // Given
+        Long contentId = 1L;
+        Content content = new Content("제목", "내용", 0L);
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(content));
+
+        // When
+        ContentsResponse result = contentsService.getContent(contentId);
+
+        // Then
+        assertThat(result.getTitle()).isEqualTo("제목");
+        assertThat(result.getDescription()).isEqualTo("내용");
+        verify(contentsRepository, times(1)).findById(contentId);
+    }
 }
