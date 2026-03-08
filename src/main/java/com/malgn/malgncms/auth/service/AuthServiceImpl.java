@@ -4,7 +4,7 @@ import com.malgn.malgncms.auth.dto.LoginRequest;
 import com.malgn.malgncms.auth.dto.LoginResponse;
 import com.malgn.malgncms.auth.jwt.JwtToken;
 import com.malgn.malgncms.auth.repository.AuthRepository;
-import com.malgn.malgncms.domain.entity.Users;
+import com.malgn.malgncms.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final JwtAuthenticationProxyService jwtAuthenticationProxyService;
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        Users users = authRepository.findByUsername(loginRequest.getUsername())
+        User users = authRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), users.getPassword())) {

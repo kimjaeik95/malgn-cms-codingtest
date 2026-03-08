@@ -1,6 +1,6 @@
 package com.malgn.malgncms.users.service;
 
-import com.malgn.malgncms.domain.entity.Users;
+import com.malgn.malgncms.domain.entity.User;
 import com.malgn.malgncms.users.dto.UserRequest;
 import com.malgn.malgncms.users.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +51,7 @@ class UserServiceImplTest {
         when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
 
         // save 호출 시 들어온 객체를 그대로 반환 (Id 생성 등이 필요하면 여기서 처리)
-        when(userRepository.save(any(Users.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // 2. When (실행)
         userService.signUp(request);

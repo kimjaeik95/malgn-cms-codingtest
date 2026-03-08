@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +31,7 @@ import java.util.Map;
  * 3/8/26        JAEIK       최초 생성
  */
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtParser jwtParser;
     private final JwtValidator jwtValidator;
@@ -38,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = resolveToken(request);
-
+        log.info("token : {}" , token);
         if (token != null && jwtValidator.validateToken(token)) {
             Map<String, Object> claims = jwtParser.parseClaims(token);
             Long id = Long.valueOf(claims.get("id").toString());
@@ -60,13 +62,16 @@ public class JwtFilter extends OncePerRequestFilter {
     private String resolveToken(HttpServletRequest httpServletRequest) {
         String bearerToken = httpServletRequest.getHeader(JwtProperties.ACCESS_TOKEN_HEADER);
         if (bearerToken != null && bearerToken.startsWith(JwtProperties.ACCESS_TOKEN_PREFIX)) {
-            return bearerToken.substring(JwtProperties.ACCESS_TOKEN_PREFIX.length());
+            return bearerToken.substring(JwtProperties.ACCESS_TOKEN_PREFIX.length()).trim();
         }
         return null;
     }
 
     // 시큐리티가 인식할 수 있는 객체로 변환
     private Authentication getAuthentication(AuthenticateMember member) {
+//        String roleWithPrefix = member.getRole().startsWith("ROLE_")
+//                ? member.getRole()
+//                : "ROLE_" + member.getRole();
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(member.getRole()));
         return new UsernamePasswordAuthenticationToken(member, null, authorities);
     }
