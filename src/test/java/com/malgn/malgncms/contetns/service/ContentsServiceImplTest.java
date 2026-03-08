@@ -126,7 +126,7 @@ class ContentsServiceImplTest {
         Long contentId = 1L;
         Content content = new Content("제목", "내용", 0L);
 
-        given(contentsRepository.findById(contentId)).willReturn(Optional.of(content));
+        given(contentsRepository.findByIdWithLock(contentId)).willReturn(Optional.of(content));
 
         // When
         ContentsResponse result = contentsService.getContent(contentId);
@@ -134,7 +134,8 @@ class ContentsServiceImplTest {
         // Then
         assertThat(result.getTitle()).isEqualTo("제목");
         assertThat(result.getDescription()).isEqualTo("내용");
-        verify(contentsRepository, times(1)).findById(contentId);
+        assertThat(content.getViewCount()).isEqualTo(1L); // 조회수 1 증가했는지 검증
+        verify(contentsRepository, times(1)).findByIdWithLock(contentId);
     }
 
     @Test

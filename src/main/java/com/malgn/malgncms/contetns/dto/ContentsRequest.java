@@ -1,5 +1,6 @@
 package com.malgn.malgncms.contetns.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,8 +31,10 @@ public class ContentsRequest {
 
     @NotBlank
     @Size(max = 100)
+    @Schema(description = "콘텐츠 제목", example = "임시 제목")
     private String title;
 
     @NotBlank
+    @Schema(description = "콘텐츠 내용", example = "합격하게 해주세요!")
     private String description;
 }

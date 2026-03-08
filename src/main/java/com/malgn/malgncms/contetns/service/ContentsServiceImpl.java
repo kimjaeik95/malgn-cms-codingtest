@@ -58,9 +58,12 @@ public class ContentsServiceImpl implements ContentsService {
     }
 
     @Override
+    @Transactional
     public ContentsResponse getContent(Long id) {
-        Content content = contentsRepository.findById(id)
+        Content content = contentsRepository.findByIdWithLock(id)
                 .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
+
+        content.viewCountPlus();
 
         return ContentsResponse.toDto(content);
     }

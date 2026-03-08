@@ -75,6 +75,10 @@ public class Content {
         this.lastModifiedBy = username;
     }
 
+    public void viewCountPlus() {
+        this.viewCount += 1;
+    }
+
     public static Content toEntity(String username, ContentsRequest contentsRequest) {
         return Content.builder()
                 .title(contentsRequest.getTitle())

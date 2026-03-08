@@ -4,6 +4,7 @@ import com.malgn.malgncms.auth.AuthenticateMember;
 import com.malgn.malgncms.contetns.dto.ContentsRequest;
 import com.malgn.malgncms.contetns.dto.ContentsResponse;
 import com.malgn.malgncms.contetns.service.ContentsService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -41,6 +42,7 @@ import java.util.List;
 public class ContentsController {
     private final ContentsService contentsService;
 
+    @Operation(description = "콘텐츠 추가")
     @PostMapping("/contents")
     public ResponseEntity<ContentsResponse> createContent(
             @AuthenticationPrincipal AuthenticateMember authenticateMember,
@@ -49,6 +51,7 @@ public class ContentsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(contentsResponse);
     }
 
+    @Operation(description = "콘텐츠 전체 조회 (페이징)")
     @GetMapping("/contents")
     public ResponseEntity<List<ContentsResponse>> getContests(
             @ParameterObject
@@ -59,12 +62,14 @@ public class ContentsController {
         return ResponseEntity.ok().body(contentsResponseList);
     }
 
+    @Operation(description = "콘텐츠 상세조회")
     @GetMapping("/{id}")
     public ResponseEntity<ContentsResponse> getContent(@PathVariable("id") Long id) {
         ContentsResponse contentsResponse = contentsService.getContent(id);
         return ResponseEntity.ok().body(contentsResponse);
     }
 
+    @Operation(description = "콘텐츠 수정")
     @PutMapping("/{id}")
     public ResponseEntity<ContentsResponse> updateContent(
             @PathVariable("id") Long id,
@@ -76,6 +81,7 @@ public class ContentsController {
         return ResponseEntity.ok(contentsResponse);
     }
 
+    @Operation(description = "콘텐츠 삭제")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> DeleteContent(
             @PathVariable("id") Long id,
