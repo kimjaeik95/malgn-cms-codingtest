@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -133,5 +134,108 @@ class ContentsServiceImplTest {
         assertThat(result.getTitle()).isEqualTo("제목");
         assertThat(result.getDescription()).isEqualTo("내용");
         verify(contentsRepository, times(1)).findById(contentId);
+    }
+
+    @Test
+    @DisplayName("콘텐츠 본인만 수정 성공 테스트")
+    void updateContentTest() {
+        // Given
+        Long contentId = 1L;
+        String username = "jaeik";
+        String role = String.valueOf(Role.USER);
+
+        // 게시글 생성, 유저객체 담기
+        ContentsRequest updateRequest = new ContentsRequest("수정 제목", "수정 내용");
+        AuthenticateMember authMember = new AuthenticateMember(1L, username, role);
+
+        // 데이터준비
+        Content existingContent = Content.builder()
+                .title("원래 제목")
+                .description("원래 내용")
+                .createBy(username)
+                .build();
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(existingContent));
+
+        // When
+        ContentsResponse result = contentsService.updateContent(contentId, authMember, updateRequest);
+
+        // Then
+        // 제목과 내용이 성공적으로 수정되었는지 확인
+        assertThat(result.getTitle()).isEqualTo("수정 제목");
+        assertThat(result.getDescription()).isEqualTo("수정 내용");
+
+        // 콘텐츠 작성자랑 , 로그인 된 작성자랑 같은지
+        assertThat(existingContent.getCreateBy()).isEqualTo(authMember.getUsername());
+
+        // 수정자 정보가 현재 유저로 기록되었는지 확인
+        assertThat(existingContent.getLastModifiedBy()).isEqualTo(username);
+
+        //  리포지토리 조회가 정상적으로 수행되었는지 확인
+        verify(contentsRepository, times(1)).findById(contentId);
+    }
+
+    @Test
+    @DisplayName("관리자는 작성자가 아니어도 모든 콘텐츠를 수정할 수 있다 성공테스트")
+    void updateContentByAdmin() {
+        // Given
+        Long contentId = 1L;
+        String adminUsername = "adminJack";
+        String role = String.valueOf(Role.ADMIN);
+
+        // 1. 관리자 권한을 가진 인증 객체 생성
+        AuthenticateMember adminMember = new AuthenticateMember(1L, adminUsername, role);
+        ContentsRequest updateRequest = new ContentsRequest("관리자가 수정한 제목", "관리자가 수정한 내용");
+
+        // 2. 다른 사람이 작성한 기존 게시글 데이터 준비
+        Content existingContent = Content.builder()
+                .title("원래 제목")
+                .description("원래 내용")
+                .createBy("다른작성자")
+                .build();
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(existingContent));
+
+        // When
+        ContentsResponse result = contentsService.updateContent(contentId, adminMember, updateRequest);
+
+        // Then
+        // 작성자가 아님에도 isAdmin 조건에 의해 수정이 성공해야 함
+        assertThat(result.getTitle()).isEqualTo("관리자가 수정한 제목");
+        assertThat(result.getDescription()).isEqualTo("관리자가 수정한 내용");
+
+        // 엔티티의 최종 수정자가 관리자 이름으로 남았는지 확인
+        assertThat(existingContent.getLastModifiedBy()).isEqualTo(adminUsername);
+
+        // 리포지토리 조회 호출 확인
+        verify(contentsRepository, times(1)).findById(contentId);
+    }
+
+    @Test
+    @DisplayName("User 권한은 작성자가 아니어도 모든 콘텐츠를 수정할 수 없다. 오류 테스트 ")
+    void updateContentByUser() {
+        // Given
+        Long contentId = 1L;
+        String otherUsername = "userJack";
+        String role = String.valueOf(Role.USER);
+
+        // 1. 관리자 권한을 가진 인증 객체 생성
+        AuthenticateMember userMember = new AuthenticateMember(1L, otherUsername, role);
+        ContentsRequest updateRequest = new ContentsRequest("수정 시도 제목", "수정 시도 내용");
+
+        // 2. 다른 사람이 작성한 기존 게시글 데이터 준비
+        Content existingContent = Content.builder()
+                .title("원래 제목")
+                .description("원래 내용")
+                .createBy("다른작성자")
+                .build();
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(existingContent));
+
+
+        // User 권한 +  다른사람 콘텐츠 수정시 실패 해야 함
+        assertThatThrownBy(() -> contentsService.updateContent(contentId, userMember, updateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("수정 권한이 없습니다.");
     }
 }

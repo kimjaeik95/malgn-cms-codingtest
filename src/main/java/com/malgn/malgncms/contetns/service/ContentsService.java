@@ -26,4 +26,6 @@ public interface ContentsService {
 
     ContentsResponse getContent(Long id);
 
+    ContentsResponse updateContent(Long contentId, AuthenticateMember authenticateMember, ContentsRequest contentsRequest);
+
 }

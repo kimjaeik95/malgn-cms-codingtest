@@ -68,6 +68,13 @@ public class Content {
         this.createdDate = Instant.now(); // 테스트용 기본값
     }
 
+    public void updateContent(ContentsRequest contentsRequest, String username) {
+        this.title = contentsRequest.getTitle();
+        this.description = contentsRequest.getDescription();
+        this.lastModifiedDate = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toInstant();
+        this.lastModifiedBy = username;
+    }
+
     public static Content toEntity(String username, ContentsRequest contentsRequest) {
         return Content.builder()
                 .title(contentsRequest.getTitle())

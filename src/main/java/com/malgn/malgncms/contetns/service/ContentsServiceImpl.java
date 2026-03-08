@@ -1,6 +1,7 @@
 package com.malgn.malgncms.contetns.service;
 
 import com.malgn.malgncms.auth.AuthenticateMember;
+import com.malgn.malgncms.auth.Role;
 import com.malgn.malgncms.contetns.dto.ContentsRequest;
 import com.malgn.malgncms.contetns.dto.ContentsResponse;
 import com.malgn.malgncms.contetns.repository.ContentsRepository;
@@ -59,6 +60,26 @@ public class ContentsServiceImpl implements ContentsService{
     public ContentsResponse getContent(Long id) {
         Content content = contentsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
+
+        return ContentsResponse.toDto(content);
+    }
+
+    @Override
+    @Transactional
+    public ContentsResponse updateContent(Long contentId, AuthenticateMember authenticateMember, ContentsRequest contentsRequest) {
+        Content content = contentsRepository.findById(contentId)
+                .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
+
+        boolean isAdmin = Role.ADMIN.name().equals(authenticateMember.getRole());
+        boolean isMine = content.getCreateBy().equals(authenticateMember.getUsername());
+
+        boolean possibleUpdate = isMine || isAdmin;
+
+        if (!possibleUpdate) {
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
+
+        content.updateContent(contentsRequest, authenticateMember.getUsername());
 
         return ContentsResponse.toDto(content);
     }

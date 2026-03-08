@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,5 +62,16 @@ public class ContentsController {
     public ResponseEntity<ContentsResponse> getContent(@PathVariable("id") Long id) {
         ContentsResponse contentsResponse = contentsService.getContent(id);
         return ResponseEntity.ok().body(contentsResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ContentsResponse> updateContent(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal AuthenticateMember authenticateMember,
+            @RequestBody ContentsRequest contentsRequest) {
+
+        ContentsResponse contentsResponse = contentsService.updateContent(id, authenticateMember, contentsRequest);
+
+        return ResponseEntity.ok(contentsResponse);
     }
 }
