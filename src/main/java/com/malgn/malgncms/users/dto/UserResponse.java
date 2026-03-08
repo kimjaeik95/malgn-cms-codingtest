@@ -1,12 +1,7 @@
 package com.malgn.malgncms.users.dto;
 
 import com.malgn.malgncms.auth.Role;
-import com.malgn.malgncms.domain.entity.Users;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.malgn.malgncms.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +30,7 @@ public class UserResponse {
     private Role role;
     private Instant createdDate;
 
-    public static UserResponse toDto(Users users) {
+    public static UserResponse toDto(User users) {
         return UserResponse.builder()
                 .id(users.getId())
                 .username(users.getUsername())

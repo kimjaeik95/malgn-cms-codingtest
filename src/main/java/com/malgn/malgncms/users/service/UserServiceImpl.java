@@ -1,7 +1,7 @@
 package com.malgn.malgncms.users.service;
 
 import com.malgn.malgncms.auth.Role;
-import com.malgn.malgncms.domain.entity.Users;
+import com.malgn.malgncms.domain.entity.User;
 import com.malgn.malgncms.users.dto.UserRequest;
 import com.malgn.malgncms.users.dto.UserResponse;
 import com.malgn.malgncms.users.repository.UserRepository;
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("중복된 username 있습니다.");
         }
         String password = passwordEncoder.encode(userRequest.getPassword());
-        Users newUser = Users.toEntity(userRequest, password, Role.USER);
+        User newUser = User.toEntity(userRequest, password, Role.USER);
         userRepository.save(newUser);
         return UserResponse.toDto(newUser);
     }
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("중복된 username 있습니다.");
         }
         String password = passwordEncoder.encode(userRequest.getPassword());
-        Users newUser = Users.toEntity(userRequest, password, Role.ADMIN);
+        User newUser = User.toEntity(userRequest, password, Role.ADMIN);
         userRepository.save(newUser);
         return UserResponse.toDto(newUser);
     }

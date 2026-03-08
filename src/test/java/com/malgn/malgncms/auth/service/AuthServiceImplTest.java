@@ -9,7 +9,7 @@ import com.malgn.malgncms.auth.dto.LoginRequest;
 import com.malgn.malgncms.auth.dto.LoginResponse;
 import com.malgn.malgncms.auth.jwt.JwtToken;
 import com.malgn.malgncms.auth.repository.AuthRepository;
-import com.malgn.malgncms.domain.entity.Users;
+import com.malgn.malgncms.domain.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +54,7 @@ class AuthServiceImplTest {
         Role role = Role.USER;
         JwtToken mockToken = new JwtToken("access-token-123");
         LoginRequest request = new LoginRequest(username, password);
-        Users user = Users.builder()
+        User user = User.builder()
                 .id(userId)
                 .username(username)
                 .password(encodedPassword)
@@ -88,7 +88,7 @@ class AuthServiceImplTest {
 
         String encodedPassword = "encoded_password123";
 
-        Users user = Users.builder()
+        User user = User.builder()
                 .id(1L)
                 .username(username)
                 .password(encodedPassword)

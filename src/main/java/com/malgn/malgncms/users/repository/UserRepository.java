@@ -1,7 +1,9 @@
 package com.malgn.malgncms.users.repository;
 
-import com.malgn.malgncms.domain.entity.Users;
+import com.malgn.malgncms.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 /**
  * packageName    : com.malgn.malgncms.users.repository
@@ -14,6 +16,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * -----------------------------------------------------------
  * 3/8/26        JAEIK       최초 생성
  */
-public interface UserRepository extends JpaRepository<Users, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
+
+    Optional<User> findByUsername(String username);
 }

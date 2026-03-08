@@ -36,7 +36,7 @@ import java.time.ZonedDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,8 +54,8 @@ public class Users {
     @Column(name = "created_date")
     private Instant createdDate;
 
-    public static Users toEntity(UserRequest userRequest, String encoderPassword, Role role) {
-        return Users.builder()
+    public static User toEntity(UserRequest userRequest, String encoderPassword, Role role) {
+        return User.builder()
                 .username(userRequest.getUsername())
                 .password(encoderPassword)
                 .role(role)
