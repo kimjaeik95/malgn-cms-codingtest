@@ -63,14 +63,14 @@ public class ContentsController {
     }
 
     @Operation(description = "콘텐츠 상세조회")
-    @GetMapping("/{id}")
+    @GetMapping("/contents/{id}")
     public ResponseEntity<ContentsResponse> getContent(@PathVariable("id") Long id) {
         ContentsResponse contentsResponse = contentsService.getContent(id);
         return ResponseEntity.ok().body(contentsResponse);
     }
 
     @Operation(description = "콘텐츠 수정")
-    @PutMapping("/{id}")
+    @PutMapping("/contents/{id}")
     public ResponseEntity<ContentsResponse> updateContent(
             @PathVariable("id") Long id,
             @AuthenticationPrincipal AuthenticateMember authenticateMember,
@@ -82,7 +82,7 @@ public class ContentsController {
     }
 
     @Operation(description = "콘텐츠 삭제")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/contents/{id}")
     public ResponseEntity<Void> DeleteContent(
             @PathVariable("id") Long id,
             @AuthenticationPrincipal AuthenticateMember authenticateMember
