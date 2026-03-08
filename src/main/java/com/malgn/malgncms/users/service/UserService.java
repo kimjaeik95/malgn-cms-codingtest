@@ -1,5 +1,10 @@
-package com.malgn.malgncms.users.service;/**
- *packageName    : com.malgn.malgncms.users.service
+package com.malgn.malgncms.users.service;
+
+import com.malgn.malgncms.users.dto.UserRequest;
+import com.malgn.malgncms.users.dto.UserResponse;
+
+/**
+ * packageName    : com.malgn.malgncms.users.service
  * fileName       : UserService
  * author         : JAEIK
  * date           : 3/8/26
@@ -8,5 +13,9 @@ package com.malgn.malgncms.users.service;/**
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 3/8/26        JAEIK       최초 생성
- */public interface UserService {
+ */
+public interface UserService {
+    UserResponse signUp(UserRequest userRequest);
+
+    UserResponse signUpAdmin(UserRequest userRequest);
 }

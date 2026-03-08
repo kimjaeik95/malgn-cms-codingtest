@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .cors((cors) -> cors.configurationSource(corsConfigurationSource()))
                 .csrf((csrf) -> csrf.disable()) // JWT 방식으로 인해 세션로그인으로할땐 활성화해야함
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api/user/signup", "/api/admin/signup").permitAll()
                         .requestMatchers("/api/contests/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT 방식  세션방식은 ALWAYS

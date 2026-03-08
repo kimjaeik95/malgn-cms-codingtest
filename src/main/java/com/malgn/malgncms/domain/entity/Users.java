@@ -1,6 +1,7 @@
 package com.malgn.malgncms.domain.entity;
 
 import com.malgn.malgncms.auth.Role;
+import com.malgn.malgncms.users.dto.UserRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,10 +10,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
@@ -29,6 +29,7 @@ import java.time.Instant;
  * 3/6/26        JAEIK       최초 생성
  */
 @Entity
+@Getter
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,13 +39,9 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 30)
     @Column(name = "username")
     private String username;
 
-    @NotBlank
-    @Size(max = 255)
     @Column(name = "password")
     private String password;
 
@@ -54,4 +51,13 @@ public class Users {
 
     @Column(name = "created_date")
     private Instant createdDate;
+
+    public static Users toEntity(UserRequest userRequest, String encoderPassword, Role role) {
+        return Users.builder()
+                .username(userRequest.getUsername())
+                .password(encoderPassword)
+                .role(role)
+                .createdDate(Instant.now())
+                .build();
+    }
 }
