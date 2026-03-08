@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 /**
  * packageName    : com.malgn.malgncms.domain.entity
@@ -57,7 +59,7 @@ public class Users {
                 .username(userRequest.getUsername())
                 .password(encoderPassword)
                 .role(role)
-                .createdDate(Instant.now())
+                .createdDate(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toInstant())
                 .build();
     }
 }
