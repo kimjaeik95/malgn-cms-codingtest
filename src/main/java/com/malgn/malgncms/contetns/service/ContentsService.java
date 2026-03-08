@@ -28,4 +28,6 @@ public interface ContentsService {
 
     ContentsResponse updateContent(Long contentId, AuthenticateMember authenticateMember, ContentsRequest contentsRequest);
 
+    void deleteContent(Long contentId, AuthenticateMember authenticateMember);
+
 }

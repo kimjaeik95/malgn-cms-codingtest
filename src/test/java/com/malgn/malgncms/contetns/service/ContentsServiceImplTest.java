@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -237,5 +238,52 @@ class ContentsServiceImplTest {
         assertThatThrownBy(() -> contentsService.updateContent(contentId, userMember, updateRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("수정 권한이 없습니다.");
+    }
+
+    @Test
+    @DisplayName("관리자는 작성자가 아니어도 모든 콘텐츠를 수정할 수 있다 성공테스트")
+    void deleteContent_AdminSuccess() {
+        // Given
+        Long contentId = 1L;
+        AuthenticateMember admin = new AuthenticateMember(1L, "adminUser", Role.ADMIN.name());
+
+        Content existingContent = Content.builder()
+                .title("원래 제목")
+                .description("원래 내용")
+                .createBy("다른작성자")
+                .build();
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(existingContent));
+
+        // When
+        contentsService.deleteContent(contentId, admin);
+
+        // Then
+        // 실제로 리포지토리의 delete 메서드가 호출되었는지 확인
+        verify(contentsRepository, times(1)).delete(existingContent);
+    }
+
+    @Test
+    @DisplayName("User 권한은 작성자가 아니어도 모든 콘텐츠를 삭제 할 수 없다. 오류 테스트 ")
+    void deleteContent_UserFail() {
+        // Given
+        Long contentId = 1L;
+        AuthenticateMember otherUser = new AuthenticateMember(2L, "otherUser", Role.USER.name());
+
+        Content existingContent = Content.builder()
+                .title("원래 제목")
+                .description("원래 내용")
+                .createBy("다른작성자")
+                .build();
+
+        given(contentsRepository.findById(contentId)).willReturn(Optional.of(existingContent));
+
+        // When & Then
+        assertThatThrownBy(() -> contentsService.deleteContent(contentId, otherUser))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("삭제 권한이 없습니다.");
+
+        // 예외가 터졌으므로 delete 메서드는 호출되면 안 됨
+        verify(contentsRepository, never()).delete(any(Content.class));
     }
 }

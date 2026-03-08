@@ -31,16 +31,17 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 @Service
-public class ContentsServiceImpl implements ContentsService{
+public class ContentsServiceImpl implements ContentsService {
     private final ContentsRepository contentsRepository;
     private final UserRepository userRepository;
+
     @Override
     @Transactional
     public ContentsResponse createContent(AuthenticateMember authenticateMember, ContentsRequest contentsRequest) {
         User user = userRepository.findByUsername(authenticateMember.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("사용자 이름을 찾을 수 없습니다."));
 
-        Content content = Content.toEntity(user.getUsername(),contentsRequest);
+        Content content = Content.toEntity(user.getUsername(), contentsRequest);
         contentsRepository.save(content);
         return ContentsResponse.toDto(content);
     }
@@ -70,17 +71,33 @@ public class ContentsServiceImpl implements ContentsService{
         Content content = contentsRepository.findById(contentId)
                 .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
 
-        boolean isAdmin = Role.ADMIN.name().equals(authenticateMember.getRole());
-        boolean isMine = content.getCreateBy().equals(authenticateMember.getUsername());
-
-        boolean possibleUpdate = isMine || isAdmin;
-
-        if (!possibleUpdate) {
-            throw new IllegalArgumentException("수정 권한이 없습니다.");
-        }
+        checkUpdateDelete(content, authenticateMember, "수정");
 
         content.updateContent(contentsRequest, authenticateMember.getUsername());
 
         return ContentsResponse.toDto(content);
+    }
+    @Override
+    @Transactional
+    public void deleteContent(Long contentId, AuthenticateMember authenticateMember) {
+        Content content = contentsRepository.findById(contentId)
+                .orElseThrow(() -> new IllegalArgumentException("콘텐츠가 없습니다."));
+
+        checkUpdateDelete(content, authenticateMember, "삭제");
+
+        contentsRepository.delete(content);
+    }
+
+
+    // 공통 메서드 분리
+    private void checkUpdateDelete( Content content, AuthenticateMember authenticateMember, String action) {
+        boolean isAdmin = Role.ADMIN.name().equals(authenticateMember.getRole());
+        boolean isMine = content.getCreateBy().equals(authenticateMember.getUsername());
+
+        boolean possibleUpdateDelete = isMine || isAdmin;
+
+        if (!possibleUpdateDelete) {
+            throw new IllegalArgumentException(action + " 권한이 없습니다.");
+        }
     }
 }
