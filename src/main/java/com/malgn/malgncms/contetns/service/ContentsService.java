@@ -3,6 +3,9 @@ package com.malgn.malgncms.contetns.service;
 import com.malgn.malgncms.auth.AuthenticateMember;
 import com.malgn.malgncms.contetns.dto.ContentsRequest;
 import com.malgn.malgncms.contetns.dto.ContentsResponse;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * packageName    : com.malgn.malgncms.contetns.service
@@ -17,5 +20,7 @@ import com.malgn.malgncms.contetns.dto.ContentsResponse;
  */
 public interface ContentsService {
     ContentsResponse createContent(AuthenticateMember AuthenticateMember, ContentsRequest contentsRequest);
+
+    List<ContentsResponse> getContents(Pageable pageable);
 
 }

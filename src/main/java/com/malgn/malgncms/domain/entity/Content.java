@@ -61,6 +61,13 @@ public class Content {
     @Column(name = "last_modified_by")
     private String lastModifiedBy;
 
+    public Content(String title, String description, Long viewCount) {
+        this.title = title;
+        this.description = description;
+        this.viewCount = viewCount;
+        this.createdDate = Instant.now(); // 테스트용 기본값
+    }
+
     public static Content toEntity(String username, ContentsRequest contentsRequest) {
         return Content.builder()
                 .title(contentsRequest.getTitle())

@@ -15,7 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -89,5 +94,26 @@ class ContentsServiceImplTest {
         assertThrows(IllegalArgumentException.class, () -> {
             contentsService.createContent(auth, new ContentsRequest("제목", "내용"));
         });
+    }
+
+    @Test
+    @DisplayName("콘텐츠 목록 페이징 조회 성공")
+    void getContentsPage() {
+        // Given
+        Pageable pageable = PageRequest.of(0, 10);
+        Content content1 = new Content("제목", "내용1", 0L); // 실제 엔티티 구조에 맞게 생성
+        Content content2 = new Content("제목", "내용1", 0L);
+
+        Page<Content> mockPage = new PageImpl<>(List.of(content1, content2));
+
+        given(contentsRepository.findAll(pageable)).willReturn(mockPage);
+
+        // When
+        List<ContentsResponse> result = contentsService.getContents(pageable);
+
+        // Then
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getTitle()).isEqualTo("제목");
+        verify(contentsRepository, times(1)).findAll(pageable);
     }
 }
