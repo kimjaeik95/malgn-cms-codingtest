@@ -1,4 +1,4 @@
-package com.malgn.malgncms.domain.dto;
+package com.malgn.malgncms.auth;
 
 /**
  * packageName    : com.malgn.malgncms.domain.dto
