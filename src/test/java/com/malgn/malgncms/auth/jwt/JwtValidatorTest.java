@@ -1,7 +1,7 @@
-package com.malgn.malgncms.jwt;
+package com.malgn.malgncms.auth.jwt;
 
-import com.malgn.malgncms.domain.dto.Role;
-import com.malgn.malgncms.users.service.JwtAuthenticationProxyService;
+import com.malgn.malgncms.auth.Role;
+import com.malgn.malgncms.auth.service.JwtAuthenticationProxyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

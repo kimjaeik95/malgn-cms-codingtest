@@ -1,4 +1,4 @@
-package com.malgn.malgncms.jwt;
+package com.malgn.malgncms.auth.jwt;
 
 /**
  * packageName    : com.malgn.malgncms.jwt

@@ -1,4 +1,4 @@
-package com.malgn.malgncms.jwt;
+package com.malgn.malgncms.auth.jwt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

@@ -1,4 +1,4 @@
-package com.malgn.malgncms.jwt;
+package com.malgn.malgncms.auth.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

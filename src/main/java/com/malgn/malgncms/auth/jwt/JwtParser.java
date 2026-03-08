@@ -1,4 +1,4 @@
-package com.malgn.malgncms.jwt;
+package com.malgn.malgncms.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,9 +1,9 @@
-package com.malgn.malgncms.users.service;
+package com.malgn.malgncms.auth.service;
 
-import com.malgn.malgncms.domain.dto.Role;
-import com.malgn.malgncms.jwt.JwtProperties;
-import com.malgn.malgncms.jwt.JwtProvider;
-import com.malgn.malgncms.jwt.JwtToken;
+import com.malgn.malgncms.auth.Role;
+import com.malgn.malgncms.auth.jwt.JwtProperties;
+import com.malgn.malgncms.auth.jwt.JwtProvider;
+import com.malgn.malgncms.auth.jwt.JwtToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

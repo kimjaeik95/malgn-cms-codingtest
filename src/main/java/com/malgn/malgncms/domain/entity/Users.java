@@ -1,6 +1,6 @@
 package com.malgn.malgncms.domain.entity;
 
-import com.malgn.malgncms.domain.dto.Role;
+import com.malgn.malgncms.auth.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
